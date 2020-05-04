@@ -25,6 +25,12 @@ server.post('/api/users', (req, res) => {
 	}
 });
 
-server.get('/api/users', (req, res) => {});
+server.get('/api/users', (req, res) => {
+	if (res.json(users)) {
+		res.status(200);
+	} else {
+		res.status(500).json({ errorMessage: 'The users information could not be retrieved.' });
+	}
+});
 
 server.listen(port, () => console.log(`Api is running on port: ${port}`));
