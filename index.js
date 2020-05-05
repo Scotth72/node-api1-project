@@ -52,16 +52,12 @@ server.get('/api/users/:id', (req, res) => {
 });
 
 server.delete('/api/users/:id', (req, res) => {
-	const id = req.params.id;
-	const deleteUser = users.filter((user) => user.id !== id);
+	const found = users.some((user) => user.id === parseInt(req.params.id));
 
-	if (deleteUser) {
-		res.status(200).json(deleteUser);
-	}
-	if (!deleteUser) {
-		res.status(404).json({ message: 'The user with the specified ID does not exist.' });
+	if (found) {
+		res.json(users.filter((user) => user.id !== parseInt(req.params.id)));
 	} else {
-		res.status(500).json({ errorMessage: 'The user could not be removed' });
+		res.status(404).json({ message: 'The user with the specified ID does not exist.' });
 	}
 });
 
