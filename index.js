@@ -1,28 +1,32 @@
 const express = require('express');
+const users = require('./Users');
+const uuid = require('uuid');
+
+const logger = require('./Middleware');
 
 const server = express();
 const port = 5000;
 server.use(express.json());
 
+server.use(logger);
+
 server.get('/', (req, res) => {
 	res.send('Hello from Express');
 });
-const users = [];
 
 server.post('/api/users', (req, res) => {
-	const newUser = req.body;
-	const { name, bio } = newUser;
-	if (name.length !== 0 && bio.length !== 0) {
-		users.push(newUser);
-		newUser.id = users.length;
-		if (users.find((item) => item.id === newUser.id)) {
-			res.status(201).json(users);
-		} else {
-			res.status(400).json({ errorMessage: 'Please provide name and bio for the user.' });
-		}
-	} else {
-		res.status(500).json({ errorMessage: 'There was an error while saving the user to the database' });
+	const newUser = {
+		name: req.body.name,
+		bio: req.body.bio,
+		id: uuid.v4()
+	};
+
+	if (!newUser.name || !newUser.bio) {
+		return res.status(400).json({ errorMessage: 'Please provide name and bio for the user.' });
 	}
+
+	users.push(newUser);
+	res.json(users);
 });
 
 server.get('/api/users', (req, res) => {
@@ -62,19 +66,20 @@ server.delete('/api/users/:id', (req, res) => {
 });
 
 server.put('/api/users/:id', (req, res) => {
-	const id = req.params;
-	const { name, bio } = req.body;
-	const currentUser = users.find((user) => user.id == id);
+	const found = users.some((user) => user.id === parseInt(req.params.id));
 
-	if (!currentUser) {
-		res.status(404).json({ message: 'The user with the specified ID does not exist.' });
-	}
-	if (!name || !bio) {
-		res.status(400).json({ errorMessage: 'Please provide name and bio for the user.' });
+	if (found) {
+		const updateUser = req.body;
+		users.forEach((user) => {
+			if (user.id === parseInt(req.params.id)) {
+				user.name = updateUser.name ? updateUser.name : user.name;
+				user.bio = updateUser.bio ? updateUser.bio : user.bio;
+
+				res.status(200).json(updateUser);
+			}
+		});
 	} else {
-		currentUser.name = name;
-		currentUser.bio = bio;
-		res.status(200).json(currentUser);
+		res.status(400).json({ errorMessage: 'Please provide name and bio for the user.' });
 	}
 });
 

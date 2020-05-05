@@ -18,6 +18,7 @@
 	"homepage": "https://github.com/Scotth72/node-api1-project#readme",
 	"dependencies": {
 		"express": "^4.17.1",
+		"moment": "^2.25.3",
 		"uuid": "^8.0.0"
 	}
 }
