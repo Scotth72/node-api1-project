@@ -1,0 +1,24 @@
+{
+	"name": "api1-project",
+	"version": "1.0.0",
+	"description": "Project Starter code",
+	"main": "index.js",
+	"scripts": {
+		"server": "nodemon index.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Scotth72/node-api1-project.git"
+	},
+	"author": "Heath Scott",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/Scotth72/node-api1-project/issues"
+	},
+	"homepage": "https://github.com/Scotth72/node-api1-project#readme",
+	"dependencies": {
+		"express": "^4.17.1",
+		"moment": "^2.25.3",
+		"uuid": "^8.0.0"
+	}
+}
